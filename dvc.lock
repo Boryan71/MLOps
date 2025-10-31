@@ -12,13 +12,13 @@ stages:
       md5: b24aa318e79e793c604012d29ea69407
       size: 2304
   prepare:
-    cmd: python src/data/make-dataset.py
+    cmd: python src/data/make_dataset.py
     deps:
     - path: data/raw/UCI_Credit_Card.csv
       hash: md5
       md5: 4d07e828508a673656fe6c238cec5d58
       size: 2862995
-    - path: src/data/make-dataset.py
+    - path: src/data/make_dataset.py
       hash: md5
       md5: e9f33ee6a8572f68f9d736e0918138da
       size: 3484
