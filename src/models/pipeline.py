@@ -9,6 +9,7 @@ from sklearn.metrics import roc_curve, roc_auc_score, classification_report
 import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
+from joblib import dump
 
 # Создаем функцию для разделения данных на тренировочную и тестовую выборки
 def split_data(data_path):
@@ -119,6 +120,11 @@ print(f'AUC на тестовом наборе: {auc:.4f}')
 print('Классификация:')
 print(report)
 plot_roc_curve(best_pipe, X_test, y_test)
+
+# Сохраняем модель в формате pkl
+# model_file = './../models/LinearRegr.pkl'                   # Ноутбук
+model_file = './../../models/LinearRegr.pkl'                # Скрипт
+dump(best_pipe, model_file)
 
 # Сохраняем модель и завершаем логирование
 mlflow.sklearn.log_model(best_pipe, "model")
