@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
 from joblib import dump
+import json
 
 # Создаем функцию для разделения данных на тренировочную и тестовую выборки
 def split_data(data_path):
@@ -67,8 +68,9 @@ def optimize_hyperparameters(pipe, X_train, y_train):
 def evaluate_model(best_pipe, X_test, y_test):
     predictions = best_pipe.predict_proba(X_test)[:, 1]
     auc = roc_auc_score(y_test, predictions)
+    accuracy = best_pipe.score(X_test, y_test)
     report = classification_report(y_test, best_pipe.predict(X_test), zero_division=1)
-    return auc, report
+    return auc, accuracy, report
 
 # Создадим функцию для визуализации ROC-кривой
 def plot_roc_curve(model, X_test, y_test):
@@ -84,11 +86,11 @@ def plot_roc_curve(model, X_test, y_test):
     plt.xlabel('Ошибочно положительный результат')
     plt.ylabel('Истинно положительный результат')
     plt.title('ROC-кривая')
-    plt.legend(loc="lower right")
+    plt.legend(loc='lower right')
     plt.show()
 
 # Включаем логирование mlflow
-mlflow.start_run(run_name="pipeline")
+mlflow.start_run(run_name='pipeline')
 
 # Разбиваем данные на тренировочные и тестовые и подбираем оптимальные гиперпараметры для модели
 # raw_path = './../data/raw/UCI_Credit_Card.csv'                   # Ноутбук
@@ -108,12 +110,13 @@ best_pipe = pipe.set_params(**best_params)
 best_pipe.fit(X_train, y_train)
 
 # Оцениваем модель на тестовом наборе
-auc, report = evaluate_model(best_pipe, X_test, y_test)
+auc, accuracy, report = evaluate_model(best_pipe, X_test, y_test)
 f1 = report[94:98]
 
 # Записываем метрики модели в mlflow
-mlflow.log_metric("test_auc", auc)
-mlflow.log_metric("test_f1", f1)
+mlflow.log_metric('test_auc', auc)
+mlflow.log_metric('test_accuracy', accuracy)
+mlflow.log_metric('test_f1', f1)
 
 # Выводим оценку модели
 print(f'AUC на тестовом наборе: {auc:.4f}')
@@ -127,5 +130,16 @@ model_file = './../../models/LinearRegr.pkl'                # Скрипт
 dump(best_pipe, model_file)
 
 # Сохраняем модель и завершаем логирование
-mlflow.sklearn.log_model(best_pipe, "model")
+mlflow.sklearn.log_model(best_pipe, 'model')
 mlflow.end_run()
+
+# Сохраняем метрики в json-файл
+metrics = {
+    'accuracy': accuracy,
+    'auc': auc,
+    'f1': f1
+}
+# metric_file = './../models/LinearRegr_metrics.json'                   # Ноутбук
+metric_file = './../../models/LinearRegr_metrics.json'                # Скрипт
+with open(metric_file, 'w') as f:
+    json.dump(metrics, f)
