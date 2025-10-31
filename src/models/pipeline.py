@@ -94,7 +94,7 @@ mlflow.start_run(run_name='pipeline')
 
 # Разбиваем данные на тренировочные и тестовые и подбираем оптимальные гиперпараметры для модели
 # raw_path = './../data/raw/UCI_Credit_Card.csv'                   # Ноутбук
-raw_path = './../../data/raw/UCI_Credit_Card.csv'                # Скрипт
+raw_path = r'C:\Users\BMakunin\SF\mlops\MLOps\data\raw\UCI_Credit_Card.csv'                # Скрипт
 X_train, X_test, y_train, y_test = split_data(raw_path)
 pipe = create_pipeline()
 best_params, best_score = optimize_hyperparameters(pipe, X_train, y_train)
@@ -126,7 +126,7 @@ plot_roc_curve(best_pipe, X_test, y_test)
 
 # Сохраняем модель в формате pkl
 # model_file = './../models/LinearRegr.pkl'                   # Ноутбук
-model_file = './../../models/LinearRegr.pkl'                # Скрипт
+model_file = r'C:\Users\BMakunin\SF\mlops\MLOps\models\LinearRegr.pkl'                # Скрипт
 dump(best_pipe, model_file)
 
 # Сохраняем модель и завершаем логирование
@@ -140,6 +140,6 @@ metrics = {
     'f1': f1
 }
 # metric_file = './../models/LinearRegr_metrics.json'                   # Ноутбук
-metric_file = './../../models/LinearRegr_metrics.json'                # Скрипт
+metric_file = r'C:\Users\BMakunin\SF\mlops\MLOps\models\LinearRegr_metrics.json'                # Скрипт
 with open(metric_file, 'w') as f:
     json.dump(metrics, f)

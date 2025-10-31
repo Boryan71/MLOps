@@ -1,0 +1,49 @@
+schema: '2.0'
+stages:
+  validation:
+    cmd: python src/data/validation.py
+    deps:
+    - path: data/raw/UCI_Credit_Card.csv
+      hash: md5
+      md5: 4d07e828508a673656fe6c238cec5d58
+      size: 2862995
+    - path: src/data/validation.py
+      hash: md5
+      md5: b24aa318e79e793c604012d29ea69407
+      size: 2304
+  prepare:
+    cmd: python src/data/make-dataset.py
+    deps:
+    - path: data/raw/UCI_Credit_Card.csv
+      hash: md5
+      md5: 4d07e828508a673656fe6c238cec5d58
+      size: 2862995
+    - path: src/data/make-dataset.py
+      hash: md5
+      md5: e9f33ee6a8572f68f9d736e0918138da
+      size: 3484
+    outs:
+    - path: data/processed/preprocessed_data.csv
+      hash: md5
+      md5: 5792ea921aa96cee323aa489cae6d669
+      size: 9136753
+  train:
+    cmd: python src/models/pipeline.py
+    deps:
+    - path: data/raw/UCI_Credit_Card.csv
+      hash: md5
+      md5: 4d07e828508a673656fe6c238cec5d58
+      size: 2862995
+    - path: src/models/pipeline.py
+      hash: md5
+      md5: b956ff4711c2f81a745182db9cd50312
+      size: 6790
+    outs:
+    - path: models/LinearRegr.pkl
+      hash: md5
+      md5: 9f173fdfe0e69ed1a2b9d12e0bcf6b90
+      size: 5219
+    - path: models/LinearRegr_metrics.json
+      hash: md5
+      md5: f487c11260399e0726471280b9d477d5
+      size: 73

@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[27]:
-
-
 import pandas as pd
 from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
@@ -14,10 +8,9 @@ from nbconvert import ScriptExporter
 # In[23]:
 
 
-# raw_path = './../data/raw/'                   # Ноутбук
-raw_path = './../../data/raw/'                # Скрипт
-# processed_path = './../data/processed/'       # Ноутбук
-processed_path = './../../data/processed/'    # Скрипт
+
+raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\\"
+processed_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\processed\\"
 
 
 # In[24]:
@@ -25,9 +18,6 @@ processed_path = './../../data/processed/'    # Скрипт
 
 # Создаем функцию для загрузки датасета
 def load_data(data_path=raw_path+'UCI_Credit_Card.csv'):
-    """
-    Функция загрузки данных из csv файла.
-    """
     df = pd.read_csv(data_path)
     return df
 
@@ -36,13 +26,12 @@ def load_data(data_path=raw_path+'UCI_Credit_Card.csv'):
 
 
 # Посмотрим на наш датасет
-if __name__ == "__main__":
-    df = load_data()
-    print(f'Размер таблицы: {df.shape}')
-    print('Первые строки:')
-    print(df.head())
-    print('Типы данных:')
-    print(df.dtypes)
+df = load_data()
+print(f'Размер таблицы: {df.shape}')
+print('Первые строки:')
+print(df.head())
+print('Типы данных:')
+print(df.dtypes)
 
 
 # In[15]:
@@ -50,9 +39,6 @@ if __name__ == "__main__":
 
 # Создадим функцию, которая будет производить разведывательный анализ датасета
 def explore_data(df):
-    """
-    Функция для анализа данных
-    """
     # Находим количсество пропусков в данных
     print('Количество пропусков:')
     print(df.isna().sum())
@@ -86,11 +72,8 @@ explore_data(df)
 
 # Создадим функцию, которая будет предобрабатывать данные
 def preprocess_data(df):
-    """
-    Предварительная обработка данных
-    """
     # Удаляем столбец ID
-    df.drop(columns=["ID"], inplace=True)
+    df.drop(columns=['ID'], inplace=True)
 
     # Производим биннинг возраста
     bins = [20, 30, 40, 50, float('inf')]
@@ -114,11 +97,10 @@ def preprocess_data(df):
 
 
 # Обрабатываем данные и сохраняем датасет
-if __name__ == "__main__":
-    df_processed = preprocess_data(df)
-    output_path = Path(processed_path+'preprocessed_data.csv')
-    df_processed.to_csv(output_path, index=False)
-    print(f'\nДанные успешно сохранены в {output_path}.')
+df_processed = preprocess_data(df)
+output_path = Path(processed_path+'preprocessed_data.csv')
+df_processed.to_csv(output_path, index=False)
+print(f'\nДанные успешно сохранены в {output_path}.')
 
 
 # In[28]:

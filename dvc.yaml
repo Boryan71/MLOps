@@ -6,9 +6,9 @@ stages:
     - src/data/validation.py    
   
   prepare:
-    cmd: python src/data/make_dataset.py
+    cmd: python src/data/make-dataset.py
     deps:
-    - src/data/make_dataset.py
+    - src/data/make-dataset.py
     - data/raw/UCI_Credit_Card.csv
     outs:
     - data/processed/preprocessed_data.csv
