@@ -7,6 +7,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_curve, roc_auc_score, classification_report
 import matplotlib.pyplot as plt
+import mlflow
+import mlflow.sklearn
 
 # Создаем функцию для разделения данных на тренировочную и тестовую выборки
 def split_data(data_path):
@@ -84,12 +86,19 @@ def plot_roc_curve(model, X_test, y_test):
     plt.legend(loc="lower right")
     plt.show()
 
+# Включаем логирование mlflow
+mlflow.start_run(run_name="pipeline")
+
 # Разбиваем данные на тренировочные и тестовые и подбираем оптимальные гиперпараметры для модели
 # raw_path = './../data/raw/UCI_Credit_Card.csv'                   # Ноутбук
 raw_path = './../../data/raw/UCI_Credit_Card.csv'                # Скрипт
 X_train, X_test, y_train, y_test = split_data(raw_path)
 pipe = create_pipeline()
 best_params, best_score = optimize_hyperparameters(pipe, X_train, y_train)
+
+# Записываем лучшие параметры модели в mlflow
+mlflow.log_params(best_params)
+
 print(f'Лучшие параметры: {best_params}')
 print(f'Лучшая оценка AUC на кросс-валидации: {best_score:.4f}')
 
@@ -99,7 +108,18 @@ best_pipe.fit(X_train, y_train)
 
 # Оцениваем модель на тестовом наборе
 auc, report = evaluate_model(best_pipe, X_test, y_test)
+f1 = report[94:98]
+
+# Записываем метрики модели в mlflow
+mlflow.log_metric("test_auc", auc)
+mlflow.log_metric("test_f1", f1)
+
+# Выводим оценку модели
 print(f'AUC на тестовом наборе: {auc:.4f}')
 print('Классификация:')
 print(report)
 plot_roc_curve(best_pipe, X_test, y_test)
+
+# Сохраняем модель и завершаем логирование
+mlflow.sklearn.log_model(best_pipe, "model")
+mlflow.end_run()
