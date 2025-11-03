@@ -1,10 +1,11 @@
 import pandas as pd
+import os
 from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
 
 
-raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\\UCI_Credit_Card.csv"
-processed_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\processed\\"
+raw_path = os.path.abspath("data/raw/UCI_Credit_Card.csv")
+processed_path = os.path.abspath("data/processed/preprocessed_data.csv")
 
 
 # Создаем функцию для загрузки датасета
@@ -81,6 +82,6 @@ if __name__ == "__main__":
 
     # Обрабатываем данные и сохраняем датасет
     df_processed = preprocess_data(df)
-    output_path = Path(processed_path + "preprocessed_data.csv")
+    output_path = Path(processed_path)
     df_processed.to_csv(output_path, index=False)
     print(f"\nДанные успешно сохранены в {output_path}.")

@@ -1,4 +1,5 @@
 import pandas
+import os
 import great_expectations as gx
 from great_expectations import expectations as gxe
 
@@ -6,7 +7,7 @@ from great_expectations import expectations as gxe
 context = gx.get_context()
 
 # Загружаем датасет
-df = pandas.read_csv(r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\UCI_Credit_Card.csv")
+df = pandas.read_csv(os.path.abspath("data/raw/UCI_Credit_Card.csv"))
 
 # Создаем датасурс на основе датасета
 data_source_name = "df"

@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
@@ -127,7 +128,7 @@ if __name__ == "__main__":
     mlflow.start_run(run_name="pipeline")
 
     # Разбиваем данные на тренировочные и тестовые и подбираем оптимальные гиперпараметры для модели
-    raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\UCI_Credit_Card.csv"
+    raw_path = os.path.abspath("data/raw/UCI_Credit_Card.csv")
     X_train, X_test, y_train, y_test = split_data(raw_path)
     pipe = create_pipeline()
     best_params, best_score = optimize_hyperparameters(pipe, X_train, y_train)
@@ -158,7 +159,7 @@ if __name__ == "__main__":
     plot_roc_curve(best_pipe, X_test, y_test)
 
     # Сохраняем модель в формате pkl
-    model_file = r"C:\Users\BMakunin\SF\mlops\MLOps\models\LinearRegr.pkl"
+    model_file = os.path.abspath("models/LinearRegr.pkl")
     dump(best_pipe, model_file)
 
     # Сохраняем модель и завершаем логирование
@@ -167,6 +168,6 @@ if __name__ == "__main__":
 
     # Сохраняем метрики в json-файл
     metrics = {"accuracy": accuracy, "auc": auc, "f1": f1}
-    metric_file = r"C:\Users\BMakunin\SF\mlops\MLOps\models\LinearRegr_metrics.json"
+    metric_file = os.path.abspath("models/LinearRegr_metrics.json")
     with open(metric_file, "w") as f:
         json.dump(metrics, f)
