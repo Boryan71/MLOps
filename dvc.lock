@@ -20,8 +20,8 @@ stages:
       size: 2862995
     - path: src/data/make_dataset.py
       hash: md5
-      md5: e9f33ee6a8572f68f9d736e0918138da
-      size: 3484
+      md5: 814b8f2440cae9944f8a57194219e31b
+      size: 3553
     outs:
     - path: data/processed/preprocessed_data.csv
       hash: md5
@@ -36,8 +36,8 @@ stages:
       size: 2862995
     - path: src/models/pipeline.py
       hash: md5
-      md5: b956ff4711c2f81a745182db9cd50312
-      size: 6790
+      md5: d74337f6d604302bf16a7bc9909fff06
+      size: 6748
     outs:
     - path: models/LinearRegr.pkl
       hash: md5

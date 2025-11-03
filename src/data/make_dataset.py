@@ -4,38 +4,13 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 from nbconvert import ScriptExporter
 
-
-# In[23]:
-
-
-
-raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\\"
+raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\\UCI_Credit_Card.csv"
 processed_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\processed\\"
 
-
-# In[24]:
-
-
 # Создаем функцию для загрузки датасета
-def load_data(data_path=raw_path+'UCI_Credit_Card.csv'):
+def load_data(data_path=raw_path):
     df = pd.read_csv(data_path)
     return df
-
-
-# In[25]:
-
-
-# Посмотрим на наш датасет
-df = load_data()
-print(f'Размер таблицы: {df.shape}')
-print('Первые строки:')
-print(df.head())
-print('Типы данных:')
-print(df.dtypes)
-
-
-# In[15]:
-
 
 # Создадим функцию, которая будет производить разведывательный анализ датасета
 def explore_data(df):
@@ -60,16 +35,6 @@ def explore_data(df):
         for col in categorical_columns:
             print(f'{col}: {df[col].unique()}')
 
-
-# In[16]:
-
-
-explore_data(df)
-
-
-# In[17]:
-
-
 # Создадим функцию, которая будет предобрабатывать данные
 def preprocess_data(df):
     # Удаляем столбец ID
@@ -92,17 +57,21 @@ def preprocess_data(df):
 
     return df_encoded
 
-
-# In[26]:
-
-
-# Обрабатываем данные и сохраняем датасет
-df_processed = preprocess_data(df)
-output_path = Path(processed_path+'preprocessed_data.csv')
-df_processed.to_csv(output_path, index=False)
-print(f'\nДанные успешно сохранены в {output_path}.')
-
-
-# In[28]:
-
-
+# Определяем запуск только из скрипта
+if __name__ == '__main__':
+    # Посмотрим на наш датасет
+    df = load_data()
+    print(f'Размер таблицы: {df.shape}')
+    print('Первые строки:')
+    print(df.head())
+    print('Типы данных:')
+    print(df.dtypes)
+    
+    # Выполняем анализ датасета
+    explore_data(df)
+    
+    # Обрабатываем данные и сохраняем датасет
+    df_processed = preprocess_data(df)
+    output_path = Path(processed_path+'preprocessed_data.csv')
+    df_processed.to_csv(output_path, index=False)
+    print(f'\nДанные успешно сохранены в {output_path}.')

@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest flake8 black great_expectations
+
+      - name: Run linters
+        run: |
+          flake8 src
+          black --check src
+
+      - name: Run tests
+        run: |
+          pytest -v --junitxml=test-report.xml
+
+      - name: Validate data
+        run: |
+          python src/data/validation.py
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: test-report.xml
