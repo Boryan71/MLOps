@@ -38,7 +38,7 @@ expectations = [
     gxe.ExpectColumnToExist(column='LIMIT_BAL'),
     gxe.ExpectColumnValuesToNotBeNull(column='LIMIT_BAL'),
     gxe.ExpectColumnValuesToBeBetween(column='AGE', max_value=100, min_value=18),
-    gxe.ExpectColumnDistinctValuesToBeInSet(column='default.payment.next.month', value_set=[0,1])
+    gxe.ExpectColumnDistinctValuesToBeInSet(column='default.payment.next.month', value_set=[0, 1])
 ]
 
 for exp in expectations:

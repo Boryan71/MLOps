@@ -1,16 +1,17 @@
 import pandas as pd
 from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
-import os
-from nbconvert import ScriptExporter
+
 
 raw_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\raw\\UCI_Credit_Card.csv"
 processed_path = r"C:\Users\BMakunin\SF\mlops\MLOps\data\processed\\"
+
 
 # Создаем функцию для загрузки датасета
 def load_data(data_path=raw_path):
     df = pd.read_csv(data_path)
     return df
+
 
 # Создадим функцию, которая будет производить разведывательный анализ датасета
 def explore_data(df):
@@ -35,6 +36,7 @@ def explore_data(df):
         for col in categorical_columns:
             print(f'{col}: {df[col].unique()}')
 
+
 # Создадим функцию, которая будет предобрабатывать данные
 def preprocess_data(df):
     # Удаляем столбец ID
@@ -57,6 +59,7 @@ def preprocess_data(df):
 
     return df_encoded
 
+
 # Определяем запуск только из скрипта
 if __name__ == '__main__':
     # Посмотрим на наш датасет
@@ -66,10 +69,10 @@ if __name__ == '__main__':
     print(df.head())
     print('Типы данных:')
     print(df.dtypes)
-    
+
     # Выполняем анализ датасета
     explore_data(df)
-    
+
     # Обрабатываем данные и сохраняем датасет
     df_processed = preprocess_data(df)
     output_path = Path(processed_path+'preprocessed_data.csv')
