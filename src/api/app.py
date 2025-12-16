@@ -7,6 +7,7 @@ import pandas as pd
 MODEL_PATH = "models/LinearRegr.pkl"
 model = joblib.load(MODEL_PATH)
 
+
 # Определяем схему входных данныx
 class InputData(BaseModel):
     LIMIT_BAL: float
@@ -33,7 +34,9 @@ class InputData(BaseModel):
     PAY_AMT5: float
     PAY_AMT6: float
 
+
 app = FastAPI()
+
 
 @app.post("/predict/")
 def predict(input_data: InputData):
@@ -41,7 +44,7 @@ def predict(input_data: InputData):
         # Формируем датафрейм из полученных данных
         input_dict = input_data.dict()
         df = pd.DataFrame([input_dict])
-        
+
         # Выдаем предсказание
         pred = model.predict_proba(df)[0][1]
         return f"Вероятность дефолта: {pred*100:.2f}%"
