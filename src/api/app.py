@@ -8,8 +8,8 @@ MODEL_PATH = "models/LinearRegr.pkl"
 model = joblib.load(MODEL_PATH)
 
 
-# Определяем схему входных данныx
-class InputData(BaseModel):
+# Определяем схему входных данных (один клиент)
+class SingleClient(BaseModel):
     LIMIT_BAL: float
     SEX: int
     EDUCATION: int
@@ -35,18 +35,28 @@ class InputData(BaseModel):
     PAY_AMT6: float
 
 
+# Определяем схему входных данных (список клиентов)
+class MultipleClients(BaseModel):
+    clients: list[SingleClient]
+
+
 app = FastAPI()
 
 
 @app.post("/predict/")
-def predict(input_data: InputData):
+async def predict_multiple_clients(input_data: MultipleClients):
     try:
-        # Формируем датафрейм из полученных данных
-        input_dict = input_data.dict()
-        df = pd.DataFrame([input_dict])
+        # Формируем датафрейм из списка клиентов
+        df = pd.DataFrame([client.dict() for client in input_data.clients])
 
-        # Выдаем предсказание
-        pred = model.predict_proba(df)[0][1]
-        return f"Вероятность дефолта: {pred*100:.2f}%"
+        # Прогоняем модель и собираем прогнозы
+        predictions = model.predict_proba(df)[:, 1]
+
+        # Возвращаем список вероятностей дефолта для каждого клиента
+        return [
+            {"client_id": idx, "default_probability": f"{prob * 100:.2f}%"}
+            for idx, prob in enumerate(predictions)
+        ]
+
     except Exception as e:
         return {"error": str(e)}
